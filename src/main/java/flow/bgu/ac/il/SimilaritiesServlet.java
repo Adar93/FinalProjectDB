@@ -2,31 +2,22 @@ package flow.bgu.ac.il;
 
 import DAL.DAL_Interface;
 import DAL.DAL_InterfaceImpl;
-import DBManager.*;
-import Shapes.*;
-import SystemObj.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import il.ac.bgu.cs.bp.bpjs.execution.BProgramRunner;
+import il.ac.bgu.cs.bp.bpjs.model.BProgram;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
 
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+public class SimilaritiesServlet extends HttpServlet {
 
-
-import il.ac.bgu.cs.bp.bpjs.execution.BProgramRunner;
-
-import il.ac.bgu.cs.bp.bpjs.model.BProgram;
-
-public class CreateLllusionServlet extends HttpServlet {
-
-	final static Logger LOG = LoggerFactory.getLogger(CreateLllusionServlet.class);
+	final static Logger LOG = LoggerFactory.getLogger(SimilaritiesServlet.class);
 	private DAL_Interface DAI = DAL_InterfaceImpl.getInstance();
 	/**
 	 * 
@@ -45,15 +36,13 @@ public class CreateLllusionServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		// Extract the XML fro the message
-		BufferedReader br = request.getReader();
-		String xml = IOUtils.toString(br);
-		boolean ans = DAI.InsertObject(xml);
-		if (ans){
-			response.setStatus(HttpServletResponse.SC_OK);
-		}
-		else
-			response.setStatus(10);
+        BufferedReader br = request.getReader();
+        String ids = IOUtils.toString(br);
+        String objIDs = DAI.getObjIDByViewPointID(ids);
+
+        response.setContentType("text/plain");
+        response.getWriter().println(objIDs);
+        response.setStatus(HttpServletResponse.SC_OK);
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -63,7 +52,7 @@ public class CreateLllusionServlet extends HttpServlet {
 		//response.setHeader("Cache-control", "private, no-cache, no-store");
 		//response.setHeader("Expires", "0");
 
-		String ans = DAI.getAllIDs();
+		String ans = DAI.getAllViewPoints();
 		response.setContentType("text/plain");
 		response.getWriter().println(ans);
 		// response.getWriter().println(createGraph(request));

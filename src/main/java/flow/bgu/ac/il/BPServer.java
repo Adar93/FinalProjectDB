@@ -17,11 +17,11 @@ public class BPServer {
 	private Server server;
 
 	public void init(String[] arguments) throws Exception {
-		int port = 8090;
+		int port = 80;
 		if(arguments.length > 0) {
 			port = Integer.parseInt(arguments[0]);
 		}
-		server = new Server(port); 
+		server = new Server(port);
 
 		// Servlets
 		ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
@@ -32,6 +32,9 @@ public class BPServer {
 		//context.addServlet(new ServletHolder(new ExportServlet()), "/export");
 		context.addServlet(new ServletHolder(new FlowOpenServlet()), "/open");
 		context.addServlet(new ServletHolder(new CreateLllusionServlet()), "/run");
+		context.addServlet(new ServletHolder(new GetIllusionsServlet()), "/getillusions");
+		context.addServlet(new ServletHolder(new GetXMLServlet()), "/getxml");
+		context.addServlet(new ServletHolder(new SimilaritiesServlet()), "/similarities");
 		context.addServlet(new ServletHolder(new EventPushSerlet()), "/push");
 		
 		

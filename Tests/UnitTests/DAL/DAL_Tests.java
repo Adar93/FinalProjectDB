@@ -40,7 +40,7 @@ public class DAL_Tests {
         Set<List<Edge>> m2 = p.getSecond();
         String D3 = "blablabla";
         String email = "adarne@post.bgu.ac.il";
-        dal.InsertViewPoints(D3, SVG2_Yes, s1, s2, g1, g2, m1, m2, email);
+        //dal.InsertViewPoints(D3, SVG2_Yes, s1, s2, g1, g2, m1, m2, email);
 
         shapes = SVGParser.fileToShapes(SVG4_Yes);
         s1 = shapes.getFirst();
@@ -52,12 +52,12 @@ public class DAL_Tests {
         m2 = p.getSecond();
         D3 = "blablabla";
         email = "adarne@post.bgu.ac.il";
-        dal.InsertViewPoints(D3, SVG4_Yes, s1, s2, g1, g2, m1, m2, email);
+        //dal.InsertViewPoints(D3, SVG4_Yes, s1, s2, g1, g2, m1, m2, email);
     }
 
     @Test
     public void getAllViewPointsTest() {
-        Map<String, List<Shape>> AllViewPoints  = dal.getAllViewPoints();
+        String AllViewPoints  = dal.getAllViewPoints();
     }
 
     @Test
