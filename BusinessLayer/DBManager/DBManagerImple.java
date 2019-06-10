@@ -2,17 +2,17 @@ package DBManager;
 
 import DAL.DAL_Interface;
 import DAL.DAL_InterfaceImpl;
-import Graph.*;
-import Graph.Pair;
-import Shapes.SVGParser;
-import Shapes.Shape;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.gson.Gson;
+import com.mongodb.BasicDBObject;
+import org.apache.commons.io.IOUtils;
 
-import java.util.List;
-import java.util.Set;
+import java.io.BufferedReader;
 
 public class DBManagerImple implements DBManager {
     private static DBManager single_instance = null;
     DAL_Interface dal = DAL_InterfaceImpl.getInstance();
+    private Gson gson = new Gson();
 
     private DBManagerImple()
     {
@@ -28,20 +28,30 @@ public class DBManagerImple implements DBManager {
         return single_instance ;
     }
 
-    public boolean SaveToDB(String xml){
-        Pair<List<Shape>,List<Shape>> shapes = SVGParser.fileToShapes(xml);
-        List<Shape> s1 = shapes.getFirst();
-        List<Shape> s2 = shapes.getSecond();
-        Graph g1 = CheckingAlgorithm.createGraph(s1);
-        Graph g2 = CheckingAlgorithm.createGraph(s2);
-        Pair<Set<List<Edge>>,Set<List<Edge>>> p = CheckingAlgorithm.checkAlgorithem(g1, g2);
-        Set<List<Edge>> m1 = p.getFirst();
-        Set<List<Edge>> m2 = p.getSecond();
-        String D3 = "blablabla";
-        String email = "adarne@post.bgu.ac.il";
-        dal.Connect();
-        //dal.InsertViewPoints(D3, xml, s1, s2, g1, g2, m1, m2, email);
+    public boolean SaveToDB(String strDoc){
+        BasicDBObject[] documentArr = gson.fromJson(strDoc, BasicDBObject[].class);
+        String idToken = documentArr[3].get("id_token").toString();
+        try {
 
-        return true;
+            GoogleIdToken.Payload payLoad = IdTokenVerifierAndParser.getPayload(idToken);
+            String email = payLoad.getEmail();
+            documentArr[2].put("Email", email);
+            dal.InsertObject(documentArr);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
+    }
+
+    public String getMyObjects(String idToken){
+        try {
+            GoogleIdToken.Payload payLoad = IdTokenVerifierAndParser.getPayload(idToken);
+            String email = payLoad.getEmail();
+            return dal.getMyObjects(email);
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 }

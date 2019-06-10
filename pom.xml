@@ -171,7 +171,7 @@
 					<archive>
 						<manifest>
 							<!-- Jar file entry point -->
-							<mainClass>flow.bgu.ac.il.BPServer</mainClass>
+							<mainClass>flow.bgu.ac.il.Server</mainClass>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>dependency-jars/</classpathPrefix>
 						</manifest>

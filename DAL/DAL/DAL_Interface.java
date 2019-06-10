@@ -2,6 +2,7 @@ package DAL;
 
 import Graph.*;
 import Shapes.Shape;
+import com.mongodb.BasicDBObject;
 
 import java.util.List;
 import java.util.Set;
@@ -9,7 +10,8 @@ import java.util.Map;
 
 public interface DAL_Interface {
      boolean Connect();
-     boolean InsertObject(String strDoc);
+     boolean InsertObject(BasicDBObject[] documentArr);
+     String getMyObjects(String email);
      String getAllIDs();
      String get3DbyIDs(String IDs);
      String getXML(String ID);

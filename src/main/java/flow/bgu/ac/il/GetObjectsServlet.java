@@ -2,31 +2,24 @@ package flow.bgu.ac.il;
 
 import DAL.DAL_Interface;
 import DAL.DAL_InterfaceImpl;
-import DBManager.*;
-import Shapes.*;
-import SystemObj.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import DBManager.DBManager;
+import DBManager.DBManagerImple;
+import il.ac.bgu.cs.bp.bpjs.execution.BProgramRunner;
+import il.ac.bgu.cs.bp.bpjs.model.BProgram;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
 
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+public class GetObjectsServlet extends HttpServlet {
 
-
-import il.ac.bgu.cs.bp.bpjs.execution.BProgramRunner;
-
-import il.ac.bgu.cs.bp.bpjs.model.BProgram;
-
-public class CreateLllusionServlet extends HttpServlet {
-
-	final static Logger LOG = LoggerFactory.getLogger(CreateLllusionServlet.class);
+	final static Logger LOG = LoggerFactory.getLogger(GetObjectsServlet.class);
 	private DAL_Interface DAI = DAL_InterfaceImpl.getInstance();
 	private DBManager BLM = DBManagerImple.getInstance();
 	/**
@@ -48,13 +41,13 @@ public class CreateLllusionServlet extends HttpServlet {
 
 		// Extract the XML fro the message
 		BufferedReader br = request.getReader();
-		String info = IOUtils.toString(br);
-		boolean ans = BLM.SaveToDB(info);
-		if (ans){
-			response.setStatus(HttpServletResponse.SC_OK);
-		}
-		else
-			response.setStatus(10);
+		String idToken = IOUtils.toString(br);
+		String ans = BLM.getMyObjects(idToken);
+
+		response.setContentType("text/plain");
+		response.getWriter().println(ans);
+		// response.getWriter().println(createGraph(request));
+		response.setStatus(HttpServletResponse.SC_OK);
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)

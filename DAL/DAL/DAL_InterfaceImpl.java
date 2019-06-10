@@ -126,6 +126,20 @@ public class DAL_InterfaceImpl implements DAL_Interface {
         return gson.toJson(allIDs);
     }
 
+    public String getMyObjects(String email){
+        this.Connect();
+        List<String> allIDs = new LinkedList<>();
+        BasicDBObject searchQuery = new BasicDBObject().append("Email", email);
+        DBCursor cursor = Objects.find(searchQuery);
+        while (cursor.hasNext()) {
+            DBObject obj = cursor.next();
+            String objId = obj.get("ObjectId").toString();
+            allIDs.add(objId);
+        }
+        this.disconnect();
+        return gson.toJson(allIDs);
+    }
+
     public String get3DbyIDs(String IDs){
         this.Connect();
         List<String> IDsList = gson.fromJson(IDs, List.class);
@@ -163,14 +177,14 @@ public class DAL_InterfaceImpl implements DAL_Interface {
         return file;
     }
 
-    public boolean InsertObject(String strDoc){
+    public boolean InsertObject(BasicDBObject[] documentArr){
         this.Connect();
-        //System.out.println(strDoc);
-        BasicDBObject[] documentArr = gson.fromJson(strDoc, BasicDBObject[].class);
         ViewPoints.insert(documentArr[0]);
         ViewPoints.insert(documentArr[1]);
         Objects.insert(documentArr[2]);
         this.disconnect();
         return true;
     }
+
+
 }
