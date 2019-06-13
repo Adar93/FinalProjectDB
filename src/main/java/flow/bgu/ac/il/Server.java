@@ -2,11 +2,12 @@ package flow.bgu.ac.il;
 
 import javax.websocket.server.ServerEndpointConfig;
 
-import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.websocket.jsr356.server.ServerContainer;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 
@@ -22,7 +23,22 @@ public class Server {
 		}
 		server = new org.eclipse.jetty.server.Server(port);
 
-		// Servlets
+		//SSL
+        /*ServerConnector connector = new ServerConnector(server);
+        HttpConfiguration https = new HttpConfiguration();
+        https.addCustomizer(new SecureRequestCustomizer());
+        SslContextFactory sslContextFactory = new SslContextFactory();
+        sslContextFactory.setKeyStorePath("C:\\Users\\admin\\keystore.jks");
+        sslContextFactory.setKeyStorePassword("Illusion");
+        sslContextFactory.setKeyManagerPassword("Illusion");
+        ServerConnector sslConnector = new ServerConnector(server,
+                new SslConnectionFactory(sslContextFactory, "http/1.1"),
+                new HttpConnectionFactory(https));
+        sslConnector.setPort(443);
+        server.setConnectors(new Connector[] { connector, sslConnector });
+*/
+
+        // Servlets
 		ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 		context.setContextPath("/");
 		server.setHandler(context);
