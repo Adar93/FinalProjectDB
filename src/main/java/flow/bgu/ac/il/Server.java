@@ -2,6 +2,7 @@ package flow.bgu.ac.il;
 
 import javax.websocket.server.ServerEndpointConfig;
 
+import DBManager.*;
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
@@ -11,10 +12,10 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.websocket.jsr356.server.ServerContainer;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 
-import hackbgu.bgu.ac.il.services.DashboardServlet;
 
 public class Server {
 	private org.eclipse.jetty.server.Server server;
+	private DBManager BLM = new DBManagerImpl();
 
 	public void init(String[] arguments) throws Exception {
 		int port = 80;
@@ -43,19 +44,12 @@ public class Server {
 		context.setContextPath("/");
 		server.setHandler(context);
 
-		context.addServlet(new ServletHolder(new SaveServlet()), "/save");
-		//context.addServlet(new ServletHolder(new ExportServlet()), "/export");
-		context.addServlet(new ServletHolder(new FlowOpenServlet()), "/open");
-		context.addServlet(new ServletHolder(new CreateLllusionServlet()), "/run");
-		context.addServlet(new ServletHolder(new GetIllusionsServlet()), "/getillusions");
-		context.addServlet(new ServletHolder(new GetXMLServlet()), "/getxml");
-		context.addServlet(new ServletHolder(new SimilaritiesServlet()), "/similarities");
-		context.addServlet(new ServletHolder(new GetObjectsServlet()), "/getObjects");
-		context.addServlet(new ServletHolder(new EventPushSerlet()), "/push");
-		
-		
-		context.addServlet(new ServletHolder(new DashboardServlet()), "/dashboard/users/*");
-		context.addServlet(new ServletHolder(new DashboardServlet()), "/dashboard/courses/*");
+		context.addServlet(new ServletHolder(new CreateLllusionServlet(BLM)), "/run");
+		context.addServlet(new ServletHolder(new GetIllusionsServlet(BLM)), "/getillusions");
+		context.addServlet(new ServletHolder(new GetXMLServlet(BLM)), "/getxml");
+		context.addServlet(new ServletHolder(new SimilaritiesServlet(BLM)), "/similarities");
+		context.addServlet(new ServletHolder(new GetObjectsServlet(BLM)), "/getObjects");
+
 
 		ResourceHandler fileHandler = new ResourceHandler();
 		fileHandler.setResourceBase(".");

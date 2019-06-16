@@ -1,11 +1,7 @@
 package DAL;
 
-import Graph.Edge;
-import Graph.*;
-import Shapes.Shape;
 import com.google.gson.Gson;
 import com.mongodb.*;
-import org.bson.types.ObjectId;
 import org.json.JSONObject;
 
 import java.util.*;
@@ -17,22 +13,8 @@ public class DAL_InterfaceImpl implements DAL_Interface {
     private MongoClient mongoClient;
     private DBCollection Objects;
     private DBCollection ViewPoints;
-    private static DAL_Interface single_instance = null;
     private Gson gson = new Gson();
 
-    private DAL_InterfaceImpl()
-    {
-
-    }
-
-    public static DAL_Interface getInstance()
-    {
-        if(single_instance  == null)
-        {
-            single_instance  = new DAL_InterfaceImpl();
-        }
-        return single_instance ;
-    }
 
     public boolean Connect(){
         try {
@@ -67,12 +49,6 @@ public class DAL_InterfaceImpl implements DAL_Interface {
                     .put("lines", obj.get("Lines").toString()).toString();
 
             allViewPoints.add(myJson);
-            /*String objId = obj.get("ObjectId").toString();
-            System.out.println(objId);
-            Integer circles =  (int) (double) (Double) obj.get("Circles");
-            Integer lines = (int) (double) (Double) obj.get("Lines");
-            Pair<Integer, Integer> p = new Pair(circles,lines);
-            allViewPoints.put(objId,p);*/
         }
         this.disconnect();
         return gson.toJson(allViewPoints);
@@ -178,13 +154,46 @@ public class DAL_InterfaceImpl implements DAL_Interface {
     }
 
     public boolean InsertObject(BasicDBObject[] documentArr){
-        this.Connect();
+        boolean ans = this.Connect();
         ViewPoints.insert(documentArr[0]);
         ViewPoints.insert(documentArr[1]);
         Objects.insert(documentArr[2]);
         this.disconnect();
-        return true;
+        return ans;
     }
 
+    public boolean DeleteObject(String objID){
+        boolean ans = this.Connect();
+        BasicDBObject searchQuery = new BasicDBObject().append("ObjectId", objID);
 
+        DBCursor cursor = Objects.find(searchQuery);
+        if (cursor.hasNext()) {
+            while (cursor.hasNext()) {
+                DBObject obj = cursor.next();
+                String VPID1 = obj.get("ViewPointID1").toString();
+                String VPID2 = obj.get("ViewPointID2").toString();
+                BasicDBObject searchQuery1 = new BasicDBObject().append("ObjectId", VPID1);
+                BasicDBObject searchQuery2 = new BasicDBObject().append("ObjectId", VPID2);
+                ViewPoints.remove(searchQuery1);
+                ViewPoints.remove(searchQuery2);
+            }
+        }
+        Objects.remove(searchQuery);
+        this.disconnect();
+        return ans;
+    }
+
+    public int CountObject(){
+        this.Connect();
+        int ans = (int) Objects.count();
+        this.disconnect();
+        return ans;
+    }
+
+    public int CountVPs(){
+        this.Connect();
+        int ans = (int) ViewPoints.count();
+        this.disconnect();
+        return ans;
+    }
 }
