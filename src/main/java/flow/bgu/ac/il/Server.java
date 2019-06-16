@@ -67,7 +67,7 @@ public class Server {
 		handlers.setHandlers(new Handler[] { fileHandler, context});
 		server.setHandler(handlers);
 
-		System.out.println(">> Go to http://localhost:" + port + "/mxgraph/javascript/examples/grapheditor/www/index.html");
+		//System.out.println(">> Go to http://localhost:" + port + "/mxgraph/javascript/examples/grapheditor/www/index.html");
 	}
 	
 	public void start() throws Exception {
@@ -90,10 +90,10 @@ public class Server {
 	 * Point your browser to the displayed URL
 	 */
 	public static void main(String[] args) throws Exception {
-		Server bpserver = new Server();
-		bpserver.init(args);
-		bpserver.start();
-		bpserver.join();
-		bpserver.stop();
+		Server server = new Server();
+		server.init(args);
+		server.start();
+		server.join();
+		server.stop();
 	}
 }
