@@ -22,12 +22,15 @@ public class Server {
 		if(arguments.length > 0) {
 			port = Integer.parseInt(arguments[0]);
 		}
-		server = new org.eclipse.jetty.server.Server(port);
+		server = new org.eclipse.jetty.server.Server();
 
 		//SSL
-        /*ServerConnector connector = new ServerConnector(server);
+        ServerConnector connector = new ServerConnector(server);
+		connector.setPort(port);
+
         HttpConfiguration https = new HttpConfiguration();
         https.addCustomizer(new SecureRequestCustomizer());
+
         SslContextFactory sslContextFactory = new SslContextFactory();
         sslContextFactory.setKeyStorePath("C:\\Users\\admin\\keystore.jks");
         sslContextFactory.setKeyStorePassword("Illusion");
@@ -37,7 +40,7 @@ public class Server {
                 new HttpConnectionFactory(https));
         sslConnector.setPort(443);
         server.setConnectors(new Connector[] { connector, sslConnector });
-*/
+
 
         // Servlets
 		ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);

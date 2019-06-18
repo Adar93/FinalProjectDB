@@ -15,11 +15,8 @@ public class DAL_InterfaceImpl implements DAL_Interface {
     private DBCollection ViewPoints;
     private Gson gson = new Gson();
 
-
     public boolean Connect(){
         try {
-            //String connectionString = "mongodb://adar93:Adriel93%21@cluster0-shard-00-00-wy3je.gcp.mongodb.net:27017,cluster0-shard-00-01-wy3je.gcp.mongodb.net:27017,cluster0-shard-00-02-wy3je.gcp.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true";
-
             MongoClientURI uri = new MongoClientURI(connectionString);
             mongoClient = new MongoClient(uri);
             db = mongoClient.getDB("IllusionsDB");

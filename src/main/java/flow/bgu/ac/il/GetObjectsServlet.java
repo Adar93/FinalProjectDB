@@ -49,7 +49,7 @@ public class GetObjectsServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-
+		System.out.println("here!");
 		String ans = BLM.getAllIDs();
 		response.setContentType("text/plain");
 		response.getWriter().println(ans);
